@@ -19,17 +19,15 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-  /**  [GPPSignIn sharedInstance].clientID = kClientId;
+    [GPPSignIn sharedInstance].clientID = kClientId;
     [GPPDeepLink setDelegate:self];
     [GPPDeepLink readDeepLinkAfterInstall];
     
     [FBSession.activeSession handleDidBecomeActive];
-    //    [FBAppEvents activateApp];
-    //     [FBAppCall handleDidBecomeActive];
-    //    [FBAppCall handleDidBecomeActive];
-    //    [FBAppEvents activateApp];
-   
-   **/
+    [FBAppEvents activateApp];
+    [FBAppCall handleDidBecomeActive];
+    [FBAppCall handleDidBecomeActive];
+    [FBAppEvents activateApp];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.NavigationController = [[UINavigationController alloc] initWithRootViewController:[self LandingController]];
@@ -55,11 +53,21 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-   
+    [FBAppEvents activateApp];
+    
+    /*
+     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+     */
+    
+    // FBSample logic
+    // We need to properly handle activation of the application with regards to SSO
+    //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
+    [FBAppCall handleDidBecomeActiveWithSession:self.session];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [self saveContext];
+    [self.session close];
 }
 
 - (BOOL)application: (UIApplication *)application
@@ -67,10 +75,9 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
   sourceApplication: (NSString *)sourceApplication
          annotation: (id)annotation {
     
-    return [FBSession.activeSession handleOpenURL:url];
-    return [GPPURLHandler handleURL:url
+    return [FBAppCall handleOpenURL:url
                   sourceApplication:sourceApplication
-                         annotation:annotation];
+                        withSession:self.session];
     
 }
 

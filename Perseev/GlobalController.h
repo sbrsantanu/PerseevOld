@@ -21,4 +21,8 @@
 -(void)GotoLandingScreen;
 -(void)GotoLoginScreen;
 -(void)GotoRegisterScreen;
+-(void)GotoForgetPasswordScreen;
+-(void)GotoForgetPasswordThanksScreen;
+-(void)GotoAddInfoScreen;
+-(void)GotoDashboardScreen;
 @end

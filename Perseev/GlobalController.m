@@ -11,8 +11,12 @@
 #import "LandingScreen.h"
 #import "LoginScreen.h"
 #import "SignUpScreen.h"
+#import "ForgetPasswordScreen.h"
 #import "GlobalAccessers.h"
 #import "UIColor+Perseev.h"
+#import "FPThankyouScreen.h"
+#import "AddInformation.h"
+#import "DashboardScreen.h"
 
 @interface GlobalController () {
     RZSquaresLoading *_square;
@@ -121,5 +125,27 @@
     SignUpScreen *DataSignUpScreen = [[SignUpScreen alloc] init];
     [self GotoDifferentViewWithAnimation:DataSignUpScreen];
 }
+-(void)GotoForgetPasswordScreen
+{
+    ForgetPasswordScreen *Forgetpassword = [[ForgetPasswordScreen alloc] init];
+    [self GotoDifferentViewWithAnimation:Forgetpassword];
+}
 
+-(void)GotoForgetPasswordThanksScreen
+{
+    FPThankyouScreen *FPThanks = [[FPThankyouScreen alloc] init];
+    [self GotoDifferentViewWithAnimation:FPThanks];
+}
+
+-(void)GotoAddInfoScreen
+{
+    AddInformation *AddInformationView = [[AddInformation alloc] init];
+    [self GotoDifferentViewWithAnimation:AddInformationView];
+}
+
+-(void)GotoDashboardScreen
+{
+    DashboardScreen *dashboard = [[DashboardScreen alloc] init];
+    [self GotoDifferentViewWithAnimation:dashboard];
+}
 @end

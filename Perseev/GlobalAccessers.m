@@ -144,6 +144,7 @@
     [DataLabel setTextColor:ParamLabelTextColor];
     [DataLabel setTextAlignment:ParamLabelTextAlignment];
     [DataLabel setText:ParamLabelText];
+    [DataLabel setNumberOfLines:0];
     return DataLabel;
 }
 

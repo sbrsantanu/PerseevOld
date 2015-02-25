@@ -1,22 +1,21 @@
 //
-//  ViewController.m
+//  DashboardScreen.m
 //  Perseev
 //
-//  Created by Santanu Das Adhikary on 20/02/15.
+//  Created by Mac on 24/02/15.
 //  Copyright (c) 2015 Perseev. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "DashboardScreen.h"
 #import "VBPieChart.h"
-#import "LandingScreen.h"
 
-@interface ViewController ()<VBPieChartProtocol>
+@interface DashboardScreen ()<VBPieChartProtocol>
 @property (nonatomic, retain) VBPieChart *chart;
 @property (nonatomic, retain) NSArray *chartValues;
 @property (nonatomic, retain) UIImageView *CenterImageView;
 @end
 
-@implementation ViewController
+@implementation DashboardScreen
 
 -(void)RetunWebserviceDataWithSuccess:(VBPieChart *)DataDelegate ObjectCarrier:(NSDictionary *)ParamObjectCarrier
 {
@@ -87,23 +86,9 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor ColorPersevWhiteColor]];
+    [self.view addSubview:[super CreateViewHeaderWithBackButton:NO]];
     [self.view setNeedsLayout];
     
-    UIImageView *BGImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
-    [BGImageView setBackgroundColor:[UIColor ColorPersevWhiteColor]];
-    [BGImageView setImage:[UIImage imageNamed:@"bgscreen.jpg"]];
-    [self.view addSubview:BGImageView];
-    
-    [self.view addSubview:[self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]]];
-    
-    [NSTimer scheduledTimerWithTimeInterval:5.0
-                                     target:self
-                                   selector:@selector(GoTodifferentPage)
-                                   userInfo:nil
-                                    repeats:NO];
-    
-    /**
-   
     CGRect MainFrame = [[UIScreen mainScreen] bounds];
     
     _CenterImageView = [[UIImageView alloc] initWithFrame:CGRectMake(MainFrame.size.width/2-65, 235, 130, 130)];
@@ -141,18 +126,5 @@
                          ];
     
     [_chart setChartValues:_chartValues animation:YES];
-     **/
 }
-
--(void)GoTodifferentPage
-{
-    [super DealllocLoader];
-    [super GotoLandingScreen];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
 @end
