@@ -25,7 +25,7 @@ const int ERROR_CODE_EXCEPTION = 12345;
     NSError *error = [[NSError alloc] initWithDomain:self.name
                                                 code:ERROR_CODE_EXCEPTION
                                             userInfo:dict];
-    
+   // [dict dealloc];
     return error;
 }
 

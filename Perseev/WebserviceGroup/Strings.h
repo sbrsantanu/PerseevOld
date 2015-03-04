@@ -9,7 +9,7 @@
 #ifndef Hema_Strings_h
 #define Hema_Strings_h
 
-static NSString * const kNWEBMainDomain                         = @"http://myphpdevelopers.com/dev/hema/app/webroot/hema/";
+static NSString * const kNWEBMainDomain                         = @"http://myphpdevelopers.com/dev/perseev/";
 static NSString * const kNWEBParamSeperater                     = @"&&";
 
 /**

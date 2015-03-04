@@ -9,8 +9,12 @@
 #import "SignUpScreen.h"
 #import "GlobalAccessers.h"
 #import "UITextField+Attribute.h"
+#import "AppDelegate.h"
+#import "WebserviceProtocol.h"
+#import "NSString+PJR.h"
+#import "MPApplicationGlobalConstants.h"
 
-@interface SignUpScreen()<UITextFieldDelegate,UIScrollViewDelegate>
+@interface SignUpScreen()<UITextFieldDelegate,UIScrollViewDelegate,WebserviceProtocolDelegate>
 
 @property (nonatomic,retain) UIScrollView *MainScrollView;
 @property (nonatomic,retain) UITextField *UserId;
@@ -22,7 +26,10 @@
 @property (nonatomic,retain) UIButton *AsButton;
 @property (nonatomic,retain) UIButton *facebookButton;
 @property (nonatomic,retain) UIButton *GoogleButton;
+@property (nonatomic,retain) UIView *LoaderView;
+@property (nonatomic,retain) NSArray     * DataValueArray;
 @end
+
 @implementation SignUpScreen
 
 -(void)viewDidLoad {
@@ -123,6 +130,147 @@
     [_GoogleButton addTarget:self action:@selector(ButtonClickEvent:) forControlEvents:UIControlEventTouchUpInside];
     [_GoogleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_MainScrollView addSubview:_GoogleButton];
+    
+   /** AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (!appDelegate.session.isOpen) {
+        appDelegate.session = [[FBSession alloc] init];
+        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
+            [appDelegate.session openWithCompletionHandler:^(FBSession *session,
+                                                             FBSessionState status,
+                                                             NSError *error) {
+                
+               
+                [self updateView];
+            }];
+        }
+    }
+    **/
+    _LoaderView = [self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]];
+    
+}
+
+-(void)SignupProcess
+{
+    //[super GotoAddInfoScreen];
+    
+    for(id aSubView in [_MainScrollView subviews])
+    {
+        if([aSubView isKindOfClass:[UITextField class]])
+        {
+            UITextField *textField=(UITextField*)aSubView;
+            [textField resignFirstResponder];
+        }
+    }
+    
+    BOOL ValidationSuccess = YES;
+    
+    if ([_UserFirstName.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Firstname Please" Tag:121 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else if ([_UserLastName.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Lastname Please" Tag:121 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else if ([_UserId.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Email Please" Tag:121 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else if ([_UserPassword.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Password can't be blank" Tag:130 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    }else if (![[_UserId.text CleanTextField] isEmail]) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Provide valied email" Tag:132 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else if (![[_UserPassword.text CleanTextField] isMinLength:6 andMaxLength:12]) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Password length must be 6-12 character long" Tag:133 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    }
+    
+    if (ValidationSuccess) {
+        
+        for (id AlltextField in _MainScrollView.subviews) {
+            if ([AlltextField isKindOfClass:[UITextField class]]) {
+                UITextField *DatatextField = (UITextField *)AlltextField;
+                [DatatextField resignFirstResponder];
+            }
+        }
+        
+        self.DataValueArray = [[NSArray alloc] initWithObjects:@"AddUserData",[_UserFirstName.text CleanTextField],[_UserLastName.text CleanTextField],[_UserId.text CleanTextField],[_UserPassword.text CleanTextField],@"R", nil];
+        [self CallWebserviceForData];
+    }
+    
+}
+
+#pragma webservice delegate return methods
+
+-(void)CallWebserviceForData
+{
+    if (!IS_NETWORK_AVAILABLE())
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            SHOW_NETWORK_ERROR_ALERT();
+        });
+    } else {
+        
+        // http://myphpdevelopers.com/dev/perseev/webservice.php?request=AddUserData&first_name=aaa&last_name=zzz&email=dfgdgfdf@fghfgj.hjg&password=111&type=R
+        
+        NSString *ParameterString = @"request&&first_name&&last_name&&email&&password&&type";
+        
+        WebserviceProtocol *Datadelegate = [[WebserviceProtocol alloc] initWithParamObject:[self ReturnWebArrayFromString:ParameterString] ValueObject:self.DataValueArray UrlParameter:@"webservice.php"];
+        [Datadelegate setDelegate:self];
+    }
+}
+
+-(NSArray *)ReturnWebArrayFromString:(NSString *)DataString { return [DataString componentsSeparatedByString:@"&&"]; }
+
+-(void)RetunWebserviceDataWithSuccess:(WebserviceProtocol *)DataDelegate ObjectCarrier:(NSDictionary *)ParamObjectCarrier
+{
+    NSLog(@"Webservice success ----- %@",ParamObjectCarrier);
+}
+-(void)RetunWebserviceDataWithError:(WebserviceProtocol *)DataDelegate ObjectCarrier:(NSError *)ParamObjectCarrier
+{
+    NSLog(@"Webservice error ----- %@",[NSString stringWithFormat:@"%@",ParamObjectCarrier]);
+}
+
+- (void)updateView {
+    
+    [self.view addSubview:_LoaderView];
+    
+    AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    if (appDelegate.session.isOpen) {
+        
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+            
+            NSData * responseData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/me?fields=id,name,first_name,gender,last_name,email&access_token=%@",appDelegate.session.accessTokenData.accessToken]]];
+            if ( responseData == nil )
+                return;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                NSError* error;
+                NSDictionary* json = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                     options:kNilOptions
+                                                                       error:&error];
+                NSLog(@"json --%@",json);
+                
+                NSLog(@"UserId === %@",[json objectForKey:@"id"]);
+                
+                [_LoaderView removeFromSuperview];
+                
+            });
+        });
+    } else {
+    }
 }
 
 -(IBAction)ButtonClickEvent:(UIButton *)sender
@@ -146,14 +294,28 @@
     }
 }
 
--(void)SignupProcess
+-(void)ShowAlertWithTitle:(NSString *)ParamTitle Description:(NSString *)ParamDescription Tag:(int)ParamTag cancelButtonTitle:(NSString *)ParamcancelButtonTitle
 {
-    [super GotoAddInfoScreen];
+    UIAlertView *ShowAlert = [[UIAlertView alloc] initWithTitle:ParamTitle message:ParamDescription delegate:self cancelButtonTitle:ParamcancelButtonTitle otherButtonTitles:nil, nil];
+    [ShowAlert setTag:ParamTag];
+    [ShowAlert show];
 }
 
 -(void)FacebookLoginProcess
 {
-    
+    if (FBSession.activeSession.state == FBSessionStateOpen
+        || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
+        [FBSession.activeSession closeAndClearTokenInformation];
+    } else {
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile",@"email"]
+                                           allowLoginUI:YES
+                                      completionHandler:
+         ^(FBSession *session, FBSessionState state, NSError *error) {
+             AppDelegate* appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+             [appDelegate sessionStateChanged:session state:state error:error];
+             [self updateView];
+         }];
+    }
 }
 
 -(void)GoogleLoginProcess

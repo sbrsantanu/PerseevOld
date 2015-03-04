@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04168BBF1AA711F100176CA2 /* SignupObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 04168BBE1AA711F100176CA2 /* SignupObject.m */; };
+		049046DE1AA45276004B5401 /* GPlusHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 049046DD1AA45276004B5401 /* GPlusHelper.m */; };
 		04C589F01A970CC1002EC907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C589EF1A970CC1002EC907 /* main.m */; };
 		04C589F31A970CC1002EC907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C589F21A970CC1002EC907 /* AppDelegate.m */; };
 		04C589F61A970CC1002EC907 /* Perseev.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04C589F41A970CC1002EC907 /* Perseev.xcdatamodeld */; };
@@ -187,6 +189,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04168BBD1AA711F000176CA2 /* SignupObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupObject.h; sourceTree = "<group>"; };
+		04168BBE1AA711F100176CA2 /* SignupObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupObject.m; sourceTree = "<group>"; };
+		049046DC1AA45276004B5401 /* GPlusHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPlusHelper.h; sourceTree = "<group>"; };
+		049046DD1AA45276004B5401 /* GPlusHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPlusHelper.m; sourceTree = "<group>"; };
 		04C589EA1A970CC0002EC907 /* Perseev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Perseev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04C589EE1A970CC1002EC907 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04C589EF1A970CC1002EC907 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -509,6 +515,10 @@
 		04C589E11A970CC0002EC907 = {
 			isa = PBXGroup;
 			children = (
+				049046DC1AA45276004B5401 /* GPlusHelper.h */,
+				049046DD1AA45276004B5401 /* GPlusHelper.m */,
+				04168BBD1AA711F000176CA2 /* SignupObject.h */,
+				04168BBE1AA711F100176CA2 /* SignupObject.m */,
 				04C58B681A97441B002EC907 /* Facebook */,
 				04C58ACE1A973D36002EC907 /* GooglePlus */,
 				04C58ACD1A973D1E002EC907 /* Frameworks */,
@@ -1359,6 +1369,7 @@
 				04C58AB01A970EE8002EC907 /* KeychainItemWrapper.m in Sources */,
 				04E56E121A9B571B00F5FC62 /* ForgetPasswordScreen.m in Sources */,
 				04C58A561A970E31002EC907 /* AFHTTPRequestOperation.m in Sources */,
+				04168BBF1AA711F100176CA2 /* SignupObject.m in Sources */,
 				04C58A6A1A970E31002EC907 /* WebserviceHelper.m in Sources */,
 				04C58A691A970E31002EC907 /* UrlParameterString.m in Sources */,
 				04C58B711A974425002EC907 /* FbGraphResponse.m in Sources */,
@@ -1401,6 +1412,7 @@
 				04C58AA31A970EBB002EC907 /* UITextView+Extentation.m in Sources */,
 				04C58A581A970E31002EC907 /* AFJSONRequestOperation.m in Sources */,
 				04C58A1B1A970E06002EC907 /* AFDropdownNotification.m in Sources */,
+				049046DE1AA45276004B5401 /* GPlusHelper.m in Sources */,
 				04C58A991A970EBB002EC907 /* UIFont+FontAwesome.m in Sources */,
 				04C58AA01A970EBB002EC907 /* NSMutableArray+convenience.m in Sources */,
 				04C58B271A97438A002EC907 /* SBJsonBase.m in Sources */,
@@ -1544,6 +1556,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1561,6 +1574,7 @@
 				);
 				INFOPLIST_FILE = Perseev/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1578,6 +1592,7 @@
 				);
 				INFOPLIST_FILE = Perseev/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};

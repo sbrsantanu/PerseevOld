@@ -9,19 +9,22 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 
-static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjibbqd.apps.googleusercontent.com";
+typedef enum {
+    SocialLoginOptionNone,
+    SocialLoginOptionFacebook,
+    SocialLoginOptionGooglePlus
+} SocialLoginOption;
+
+static NSString * const kClientId = @"922600604850-cckt858imi6fdqoc2p0pugpffvhdhvbg.apps.googleusercontent.com";
 
 @interface AppDelegate ()
+@property (assign) SocialLoginOption LoginOption;
 
 @end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    [GPPSignIn sharedInstance].clientID = kClientId;
-    [GPPDeepLink setDelegate:self];
-    [GPPDeepLink readDeepLinkAfterInstall];
     
     [FBSession.activeSession handleDidBecomeActive];
     [FBAppEvents activateApp];
@@ -35,6 +38,8 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
     [self.NavigationController setHidesBottomBarWhenPushed:YES];
     [[self.NavigationController navigationBar] setHidden:YES];
     [self.window makeKeyAndVisible];
+    
+    _LoginOption = SocialLoginOptionGooglePlus;
     return YES;
 }
 
@@ -53,19 +58,13 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    
     [FBAppEvents activateApp];
-    
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
-    
-    // FBSample logic
-    // We need to properly handle activation of the application with regards to SSO
-    //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
     [FBAppCall handleDidBecomeActiveWithSession:self.session];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+    
     [self saveContext];
     [self.session close];
 }
@@ -75,10 +74,19 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
   sourceApplication: (NSString *)sourceApplication
          annotation: (id)annotation {
     
-    return [FBAppCall handleOpenURL:url
-                  sourceApplication:sourceApplication
-                        withSession:self.session];
-    
+  if (_LoginOption == SocialLoginOptionGooglePlus) {
+      
+        return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
+        
+    } else if (_LoginOption == SocialLoginOptionFacebook) {
+        
+        return [FBAppCall handleOpenURL:url
+                      sourceApplication:sourceApplication
+                            withSession:self.session];
+    } else {
+        NSLog(@"Return type none");
+    }
+    return nil;
 }
 
 -(void)didReceiveDeepLink: (GPPDeepLink *)deepLink {
@@ -92,10 +100,8 @@ static NSString * const kClientId = @"229297944500-maimik41f07e0517hb8gi1h8vnjib
     [alert show];
 }
 
-// This method will handle ALL the session state changes in the app
 - (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error
 {
-    // If the session was opened successfully
     if (!error && state == FBSessionStateOpen){
         
         // Show the user the logged-in UI
