@@ -13,8 +13,12 @@
 #import "WebserviceProtocol.h"
 #import "NSString+PJR.h"
 #import "MPApplicationGlobalConstants.h"
+#import "GPlusHelper.h"
 
 @interface SignUpScreen()<UITextFieldDelegate,UIScrollViewDelegate,WebserviceProtocolDelegate>
+{
+     NSTimer *timer;
+}
 
 @property (nonatomic,retain) UIScrollView *MainScrollView;
 @property (nonatomic,retain) UITextField *UserId;
@@ -28,6 +32,8 @@
 @property (nonatomic,retain) UIButton *GoogleButton;
 @property (nonatomic,retain) UIView *LoaderView;
 @property (nonatomic,retain) NSArray     * DataValueArray;
+
+@property (weak) AppDelegate *MainDelegate;
 @end
 
 @implementation SignUpScreen
@@ -66,7 +72,7 @@
     [_MainScrollView addSubview:_UserLastName];
     
     _UserId = [[UITextField alloc] initWithFrame:CGRectMake(20, 190, [GlobalStrings GetScreenWidth]-40, 40)];
-    [_UserId customizeWithplaceholderText:@"Username" andImage:@" "];
+    [_UserId customizeWithplaceholderText:@"Email" andImage:@" "];
     [_UserId setAutocorrectionType:UITextAutocorrectionTypeNo];
     [_UserId setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     [_UserId setTag:445];
@@ -126,12 +132,15 @@
     [_GoogleButton setBackgroundColor:[UIColor ColorPersevRedColor]];
     [_GoogleButton setTitle:@"GOOGLE PLUS" forState:UIControlStateNormal];
     [_GoogleButton.titleLabel setFont:[UIFont fontWithName:[GlobalStrings FontOswald] size:12.0f]];
-    [_GoogleButton setTag:1247];
+    [_GoogleButton setTag:1115];
     [_GoogleButton addTarget:self action:@selector(ButtonClickEvent:) forControlEvents:UIControlEventTouchUpInside];
     [_GoogleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_MainScrollView addSubview:_GoogleButton];
     
-   /** AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+   AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.session = [[FBSession alloc] init];
+    [appDelegate.session close];
+    
     if (!appDelegate.session.isOpen) {
         appDelegate.session = [[FBSession alloc] init];
         if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
@@ -144,9 +153,10 @@
             }];
         }
     }
-    **/
-    _LoaderView = [self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]];
     
+    _LoaderView = [self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]];
+    _MainDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [_MainDelegate UnsetLoginOption];
 }
 
 -(void)SignupProcess
@@ -204,13 +214,22 @@
                 [DatatextField resignFirstResponder];
             }
         }
+        [self.view addSubview:_LoaderView];
+        timer = [NSTimer scheduledTimerWithTimeInterval: 3.0
+                                             target: self
+                                           selector:@selector(onTick)
+                                           userInfo: nil repeats:NO];
         
-        self.DataValueArray = [[NSArray alloc] initWithObjects:@"AddUserData",[_UserFirstName.text CleanTextField],[_UserLastName.text CleanTextField],[_UserId.text CleanTextField],[_UserPassword.text CleanTextField],@"R", nil];
-        [self CallWebserviceForData];
+//        self.DataValueArray = [[NSArray alloc] initWithObjects:@"AddUserData",[_UserFirstName.text CleanTextField],[_UserLastName.text CleanTextField],[_UserId.text CleanTextField],[_UserPassword.text CleanTextField],@"R", nil];
+//        [self CallWebserviceForData];
     }
     
 }
-
+-(void)onTick
+{
+    [timer invalidate];
+    [super GotoAddInfoScreen];
+}
 #pragma webservice delegate return methods
 
 -(void)CallWebserviceForData
@@ -264,6 +283,9 @@
                 NSLog(@"json --%@",json);
                 
                 NSLog(@"UserId === %@",[json objectForKey:@"id"]);
+                [_UserFirstName setText:[json objectForKey:@"first_name"]];
+                [_UserLastName setText:[json objectForKey:@"last_name"]];
+                [_UserId setText:[json objectForKey:@"email"]];
                 
                 [_LoaderView removeFromSuperview];
                 
@@ -303,6 +325,13 @@
 
 -(void)FacebookLoginProcess
 {
+    for (id AlltextField in _MainScrollView.subviews) {
+        if ([AlltextField isKindOfClass:[UITextField class]]) {
+            UITextField *DatatextField = (UITextField *)AlltextField;
+            [DatatextField setText:nil];
+        }
+    }
+    [_MainDelegate SetLoginOptionFacebook];
     if (FBSession.activeSession.state == FBSessionStateOpen
         || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
         [FBSession.activeSession closeAndClearTokenInformation];
@@ -320,7 +349,43 @@
 
 -(void)GoogleLoginProcess
 {
-    
+    for (id AlltextField in _MainScrollView.subviews) {
+        if ([AlltextField isKindOfClass:[UITextField class]]) {
+            UITextField *DatatextField = (UITextField *)AlltextField;
+            [DatatextField setText:nil];
+        }
+    }
+    [_MainDelegate SetLoginOptionGooglePlus];
+    [[GPlusHelper sharedInstance] logout];
+    [self.view addSubview:_LoaderView];
+    [[GPlusHelper sharedInstance] login: ^(BOOL success, id result, NSError *error) {
+        
+        NSLog(@"UserId : %@", [GPlusHelper sharedInstance].loggedGoogleUser.identifier);
+        GTLPlusPersonEmailsItem *userEmail = [[GPlusHelper sharedInstance].loggedGoogleUser.emails objectAtIndex:0];
+        NSLog(@"UserEmail : %@", userEmail.value);
+        NSLog(@"UserdisplayName : %@", [GPlusHelper sharedInstance].loggedGoogleUser.displayName);
+        NSLog(@"Userfamilygender : %@", [GPlusHelper sharedInstance].loggedGoogleUser.gender);
+        NSLog(@"UsergivenName : %@", [GPlusHelper sharedInstance].loggedGoogleUser.domain);
+        
+        NSString *UserFirstname = nil;
+        NSString *Userlastname  = nil;
+        
+        if([GPlusHelper sharedInstance].loggedGoogleUser.displayName.length > 0) {
+            
+            NSArray *SplitedArrayFirstName = [[GPlusHelper sharedInstance].loggedGoogleUser.displayName componentsSeparatedByString:@" "];
+            UserFirstname = [SplitedArrayFirstName objectAtIndex:0];
+            
+            NSArray *SplitedArrayLastName = [[GPlusHelper sharedInstance].loggedGoogleUser.displayName componentsSeparatedByString:UserFirstname];
+            Userlastname = [SplitedArrayLastName objectAtIndex:1];
+            
+        }
+        
+        [_UserFirstName setText:UserFirstname];
+        [_UserLastName setText:Userlastname];
+        [_UserId setText:userEmail.value];
+        
+        [_LoaderView removeFromSuperview];
+    }];
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField

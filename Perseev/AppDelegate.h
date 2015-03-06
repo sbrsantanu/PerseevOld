@@ -27,5 +27,11 @@
 - (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error;
 
 @property (strong, nonatomic) FBSession *session;
+
+// Social Signup Process
+
+-(void)SetLoginOptionFacebook;
+-(void)SetLoginOptionGooglePlus;
+-(void)UnsetLoginOption;
 @end
 

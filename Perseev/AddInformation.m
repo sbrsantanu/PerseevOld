@@ -12,6 +12,10 @@
 #import "RMPickerViewController.h"
 #import "SearchViewController.h"
 #import "UIViewController+KNSemiModal.h"
+#import "TRAutocompleteView.h"
+#import "TRGoogleMapsAutocompleteItemsSource.h"
+#import "TRTextFieldExtensions.h"
+#import "TRGoogleMapsAutocompletionCellFactory.h"
 
 typedef enum
 {
@@ -21,6 +25,11 @@ typedef enum
 } SelectionType;
 
 @interface AddInformation ()<UIScrollViewDelegate,UITextFieldDelegate,RMPickerViewControllerDelegate,SearchViewControllerDelegate>
+{
+    __weak IBOutlet UITextField *_textField;
+    TRAutocompleteView *_autocompleteView;
+    NSTimer *t;
+}
 @property (nonatomic,retain) UIScrollView *MainScrollView;
 @property (nonatomic,retain) UITextField *UserSex;
 @property (nonatomic,retain) UITextField *UserAge;
@@ -29,10 +38,10 @@ typedef enum
 @property (nonatomic,retain) NSMutableArray *SexArray;
 @property (nonatomic,retain) NSMutableArray *AgeArray;
 @property (assign) SelectionType DropdownSelectionMode;
+@property (nonatomic,retain) UIView *LoaderView;
 @end
 
 @implementation AddInformation
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -54,6 +63,7 @@ typedef enum
                                                  selector:@selector(semiModalResized:)
                                                      name:kSemiModalWasResizedNotification
                                                    object:nil];
+        
     }
     return self;
 }
@@ -158,9 +168,18 @@ typedef enum
 
 -(IBAction)ButtonClickEvent:(UIButton *)sender
 {
+    _LoaderView = [self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]];
+    [self.view addSubview:_LoaderView];
+    t = [NSTimer scheduledTimerWithTimeInterval: 3.0
+                                                  target: self
+                                                selector:@selector(onTick)
+                                                userInfo: nil repeats:NO];
+}
+-(void)onTick
+{
+    [t invalidate];
     [super GotoDashboardScreen];
 }
-
 -(void)LoginProcess
 {
     NSLog(@"Login Process start");
@@ -226,33 +245,69 @@ typedef enum
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    for(id aSubView in [_MainScrollView subviews])
-    {
-        if([aSubView isKindOfClass:[UITextField class]])
-        {
-            UITextField *textField=(UITextField*)aSubView;
-            [textField resignFirstResponder];
-        }
-    }
     if (textField == _UserSex) {
+        for(id aSubView in [_MainScrollView subviews])
+        {
+            if([aSubView isKindOfClass:[UITextField class]])
+            {
+                UITextField *textField=(UITextField*)aSubView;
+                [textField resignFirstResponder];
+            }
+        }
         [UIView animateWithDuration:1.0 animations:^(void){
            // [_MainScrollView setContentOffset:CGPointMake(0, 50)];
         } completion:nil];
         [self openPickerController:textField];
     } else if (textField == _UserAge) {
+        for(id aSubView in [_MainScrollView subviews])
+        {
+            if([aSubView isKindOfClass:[UITextField class]])
+            {
+                UITextField *textField=(UITextField*)aSubView;
+                [textField resignFirstResponder];
+            }
+        }
         [UIView animateWithDuration:1.0 animations:^(void){
             //[_MainScrollView setContentOffset:CGPointMake(0, 85)];
         } completion:nil];
         [self openPickerController:textField];
     } else if (textField == _UserLocation) {
+        [textField becomeFirstResponder];
         [UIView animateWithDuration:1.0 animations:^(void){
-           // [_MainScrollView setContentOffset:CGPointMake(0, 160)];
+            [_MainScrollView setContentOffset:CGPointMake(0, 120)];
         } completion:nil];
-        [self.navigationController presentSemiViewController:semiVC withOptions:@{
-                                                                                  KNSemiModalOptionKeys.pushParentBack    : @(YES),
-                                                                                  KNSemiModalOptionKeys.animationDuration : @(2.0),
-                                                                                  KNSemiModalOptionKeys.shadowOpacity     : @(0.3),
-                                                                                  }];
+        [_UserLocation setLeftPadding:9];
+        _autocompleteView = [TRAutocompleteView autocompleteViewBindedTo:_UserLocation
+                                                             usingSource:[[TRGoogleMapsAutocompleteItemsSource alloc]
+                                                                          initWithMinimumCharactersToTrigger:2
+                                                                          apiKey:@"AIzaSyDtRdNIuvkvb3VOPRgiuaCaMYFFBPivXnY"]
+                                                             cellFactory:[[TRGoogleMapsAutocompletionCellFactory alloc]
+                                                                          initWithCellForegroundColor:[UIColor lightGrayColor]
+                                                                          fontSize:14]
+                                                            presentingIn:self];
+        _autocompleteView.topMargin = -5;
+        _autocompleteView.backgroundColor = [UIColor colorWithRed:(27) / 255.0f
+                                                            green:(27) / 255.0f
+                                                             blue:(27) / 255.0f
+                                                            alpha:1];
+        
+        _autocompleteView.didAutocompleteWith = ^(id<TRSuggestionItem> item)
+        {
+            NSLog(@"Autocompleted with: %@", item.completionText);
+            [UIView animateWithDuration:1.0 animations:^(void){
+                [_MainScrollView setContentOffset:CGPointMake(0, -20)];
+            } completion:nil];
+        };
+
+        
+//        [UIView animateWithDuration:1.0 animations:^(void){
+//           // [_MainScrollView setContentOffset:CGPointMake(0, 160)];
+//        } completion:nil];
+//        [self.navigationController presentSemiViewController:semiVC withOptions:@{
+//                                                                                  KNSemiModalOptionKeys.pushParentBack    : @(YES),
+//                                                                                  KNSemiModalOptionKeys.animationDuration : @(2.0),
+//                                                                                  KNSemiModalOptionKeys.shadowOpacity     : @(0.3),
+//                                                                                  }];
     }
 }
 
@@ -293,7 +348,7 @@ typedef enum
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+   // [textField resignFirstResponder];
     [UIView animateWithDuration:1.0 animations:^(void){
         [_MainScrollView setContentOffset:CGPointMake(0, -20)];
     } completion:nil];

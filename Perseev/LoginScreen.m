@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "WebserviceProtocol.h"
 #import "GPlusHelper.h"
+#import "NSString+PJR.h"
 
 @interface LoginScreen ()<UIScrollViewDelegate,UITextFieldDelegate,WebserviceProtocolDelegate>
 @property (nonatomic,retain) UIScrollView *MainScrollView;
@@ -23,6 +24,8 @@
 @property (nonatomic,retain) UIButton *facebookButton;
 @property (nonatomic,retain) UIButton *GoogleButton;
 @property (nonatomic,retain) UIView *LoaderView;
+
+@property (weak) AppDelegate *MainDelegate;
 @end
 
 @implementation LoginScreen
@@ -33,6 +36,8 @@
     [self.view setBackgroundColor:[UIColor ColorPersevWhiteColor]];
     
     [self.view addSubview:[super CreateViewHeaderWithBackButton:YES]];
+    
+    _MainDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     _MainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 61, [GlobalStrings GetScreenWidth], [GlobalStrings GetScreenHeight]-61)];
     [_MainScrollView setBackgroundColor:[UIColor clearColor]];
@@ -46,7 +51,7 @@
     [_MainScrollView addSubview:[GlobalAccessers getUILabelWithXposition:@"20" Yposition:@"65" BackgroundColor:[UIColor lightGrayColor] LabelTextColor:nil LabelFontName:nil LabelFontSize:nil LabelText:nil LabelHeight:@"1" LabelWidth:[NSString stringWithFormat:@"%f",([GlobalStrings GetScreenWidth]-100)] LabelTextAlignment:NSTextAlignmentLeft]];
     
     _UserId = [[UITextField alloc] initWithFrame:CGRectMake(20, 90, [GlobalStrings GetScreenWidth]-40, 40)];
-    [_UserId customizeWithplaceholderText:@"Username" andImage:@" "];
+    [_UserId customizeWithplaceholderText:@"Email" andImage:@" "];
     [_UserId setAutocorrectionType:UITextAutocorrectionTypeNo];
     [_UserId setAutocapitalizationType:UITextAutocapitalizationTypeNone];
     [_UserId setTag:443];
@@ -113,7 +118,12 @@
     [_GoogleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_MainScrollView addSubview:_GoogleButton];
     
+    //[_MainDelegate FacebookLogout];
+    
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.session = [[FBSession alloc] init];
+    [appDelegate.session close];
+    
     if (!appDelegate.session.isOpen) {
         appDelegate.session = [[FBSession alloc] init];
         if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
@@ -125,6 +135,7 @@
         }
     }
     _LoaderView = [self StartSquareLoaderWithBlurEffect:YES Color:[UIColor whiteColor]];
+    [_MainDelegate UnsetLoginOption];
 }
 
 - (void)updateView {
@@ -190,11 +201,49 @@
 
 -(void)LoginProcess
 {
-    NSLog(@"Login Process start");
+   // NSLog(@"Login Process start");
+    
+    for(id aSubView in [_MainScrollView subviews])
+    {
+        if([aSubView isKindOfClass:[UITextField class]])
+        {
+            UITextField *textField=(UITextField*)aSubView;
+            [textField resignFirstResponder];
+        }
+    }
+    
+    BOOL ValidationSuccess = YES;
+    
+    if ([_UserId.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Email Please" Tag:121 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else if ([_UserPassword.text CleanTextField].length == 0) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Password Please" Tag:121 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    }else if (![[_UserId.text CleanTextField] isEmail]) {
+        
+        [self ShowAlertWithTitle:@"Sorry" Description:@"Provide valied email" Tag:132 cancelButtonTitle:@"Ok"];
+        ValidationSuccess = NO;
+        
+    } else {
+        [super GotoDashboardScreen];
+    }
+}
+
+-(void)ShowAlertWithTitle:(NSString *)ParamTitle Description:(NSString *)ParamDescription Tag:(int)ParamTag cancelButtonTitle:(NSString *)ParamcancelButtonTitle
+{
+    UIAlertView *ShowAlert = [[UIAlertView alloc] initWithTitle:ParamTitle message:ParamDescription delegate:self cancelButtonTitle:ParamcancelButtonTitle otherButtonTitles:nil, nil];
+    [ShowAlert setTag:ParamTag];
+    [ShowAlert show];
 }
 
 -(void)FacebookLoginProcess
 {
+    [_MainDelegate SetLoginOptionFacebook];
     
     if (FBSession.activeSession.state == FBSessionStateOpen
         || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
@@ -207,13 +256,14 @@
              AppDelegate* appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
              [appDelegate sessionStateChanged:session state:state error:error];
              [self updateView];
+             [super GotoDashboardScreen];
          }];
     }
 }
 
 -(void)GoogleLoginProcess
 {
-    
+    [_MainDelegate SetLoginOptionGooglePlus];
     [[GPlusHelper sharedInstance] logout];
     [[GPlusHelper sharedInstance] login: ^(BOOL success, id result, NSError *error) {
         
@@ -223,7 +273,7 @@
         NSLog(@"UserdisplayName : %@", [GPlusHelper sharedInstance].loggedGoogleUser.displayName);
         NSLog(@"Userfamilygender : %@", [GPlusHelper sharedInstance].loggedGoogleUser.gender);
         NSLog(@"UsergivenName : %@", [GPlusHelper sharedInstance].loggedGoogleUser.domain);
-        
+        [super GotoDashboardScreen];
     }];
 }
 

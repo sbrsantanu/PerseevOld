@@ -39,7 +39,7 @@ static NSString * const kClientId = @"922600604850-cckt858imi6fdqoc2p0pugpffvhdh
     [[self.NavigationController navigationBar] setHidden:YES];
     [self.window makeKeyAndVisible];
     
-    _LoginOption = SocialLoginOptionGooglePlus;
+    _LoginOption = SocialLoginOptionNone;
     return YES;
 }
 
@@ -87,6 +87,21 @@ static NSString * const kClientId = @"922600604850-cckt858imi6fdqoc2p0pugpffvhdh
         NSLog(@"Return type none");
     }
     return nil;
+}
+
+-(void)SetLoginOptionFacebook
+{
+    _LoginOption = SocialLoginOptionFacebook;
+}
+
+-(void)SetLoginOptionGooglePlus
+{
+    _LoginOption = SocialLoginOptionGooglePlus;
+}
+
+-(void)UnsetLoginOption
+{
+    _LoginOption = SocialLoginOptionNone;
 }
 
 -(void)didReceiveDeepLink: (GPPDeepLink *)deepLink {

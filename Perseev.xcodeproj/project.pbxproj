@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		04168BBF1AA711F100176CA2 /* SignupObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 04168BBE1AA711F100176CA2 /* SignupObject.m */; };
+		047661A11AA9D5A000128AEF /* TRAutocompleteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661A01AA9D5A000128AEF /* TRAutocompleteView.m */; };
+		047661A81AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661A21AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.m */; };
+		047661A91AA9D5C700128AEF /* TRGoogleMapsSuggestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661A41AA9D5C700128AEF /* TRGoogleMapsSuggestion.m */; };
+		047661AA1AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661A71AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.m */; };
+		047661B11AA9D5DD00128AEF /* TRTextFieldExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661AB1AA9D5DD00128AEF /* TRTextFieldExtensions.m */; };
+		047661B21AA9D5DD00128AEF /* TRStringExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 047661AE1AA9D5DD00128AEF /* TRStringExtensions.m */; };
 		049046DE1AA45276004B5401 /* GPlusHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 049046DD1AA45276004B5401 /* GPlusHelper.m */; };
 		04C589F01A970CC1002EC907 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C589EF1A970CC1002EC907 /* main.m */; };
 		04C589F31A970CC1002EC907 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C589F21A970CC1002EC907 /* AppDelegate.m */; };
@@ -191,6 +197,20 @@
 /* Begin PBXFileReference section */
 		04168BBD1AA711F000176CA2 /* SignupObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignupObject.h; sourceTree = "<group>"; };
 		04168BBE1AA711F100176CA2 /* SignupObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignupObject.m; sourceTree = "<group>"; };
+		0476619F1AA9D5A000128AEF /* TRAutocompleteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRAutocompleteView.h; sourceTree = "<group>"; };
+		047661A01AA9D5A000128AEF /* TRAutocompleteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRAutocompleteView.m; sourceTree = "<group>"; };
+		047661A21AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRGoogleMapsAutocompleteItemsSource.m; sourceTree = "<group>"; };
+		047661A31AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRGoogleMapsAutocompleteItemsSource.h; sourceTree = "<group>"; };
+		047661A41AA9D5C700128AEF /* TRGoogleMapsSuggestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRGoogleMapsSuggestion.m; sourceTree = "<group>"; };
+		047661A51AA9D5C700128AEF /* TRGoogleMapsSuggestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRGoogleMapsSuggestion.h; sourceTree = "<group>"; };
+		047661A61AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRGoogleMapsAutocompletionCellFactory.h; sourceTree = "<group>"; };
+		047661A71AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRGoogleMapsAutocompletionCellFactory.m; sourceTree = "<group>"; };
+		047661AB1AA9D5DD00128AEF /* TRTextFieldExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRTextFieldExtensions.m; sourceTree = "<group>"; };
+		047661AC1AA9D5DD00128AEF /* TRTextFieldExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRTextFieldExtensions.h; sourceTree = "<group>"; };
+		047661AD1AA9D5DD00128AEF /* TRStringExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRStringExtensions.h; sourceTree = "<group>"; };
+		047661AE1AA9D5DD00128AEF /* TRStringExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRStringExtensions.m; sourceTree = "<group>"; };
+		047661AF1AA9D5DD00128AEF /* TRAutocompleteItemsSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRAutocompleteItemsSource.h; sourceTree = "<group>"; };
+		047661B01AA9D5DD00128AEF /* TRAutocompletionCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRAutocompletionCellFactory.h; sourceTree = "<group>"; };
 		049046DC1AA45276004B5401 /* GPlusHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPlusHelper.h; sourceTree = "<group>"; };
 		049046DD1AA45276004B5401 /* GPlusHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPlusHelper.m; sourceTree = "<group>"; };
 		04C589EA1A970CC0002EC907 /* Perseev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Perseev.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -512,9 +532,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0476619E1AA9D58F00128AEF /* AutoComplete */ = {
+			isa = PBXGroup;
+			children = (
+				047661AB1AA9D5DD00128AEF /* TRTextFieldExtensions.m */,
+				047661AC1AA9D5DD00128AEF /* TRTextFieldExtensions.h */,
+				047661AD1AA9D5DD00128AEF /* TRStringExtensions.h */,
+				047661AE1AA9D5DD00128AEF /* TRStringExtensions.m */,
+				047661AF1AA9D5DD00128AEF /* TRAutocompleteItemsSource.h */,
+				047661B01AA9D5DD00128AEF /* TRAutocompletionCellFactory.h */,
+				0476619F1AA9D5A000128AEF /* TRAutocompleteView.h */,
+				047661A01AA9D5A000128AEF /* TRAutocompleteView.m */,
+				047661A21AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.m */,
+				047661A31AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.h */,
+				047661A41AA9D5C700128AEF /* TRGoogleMapsSuggestion.m */,
+				047661A51AA9D5C700128AEF /* TRGoogleMapsSuggestion.h */,
+				047661A61AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.h */,
+				047661A71AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.m */,
+			);
+			name = AutoComplete;
+			sourceTree = "<group>";
+		};
 		04C589E11A970CC0002EC907 = {
 			isa = PBXGroup;
 			children = (
+				0476619E1AA9D58F00128AEF /* AutoComplete */,
 				049046DC1AA45276004B5401 /* GPlusHelper.h */,
 				049046DD1AA45276004B5401 /* GPlusHelper.m */,
 				04168BBD1AA711F000176CA2 /* SignupObject.h */,
@@ -1340,6 +1382,7 @@
 				04C7D72E1A9C970100460517 /* RMPickerViewController.m in Sources */,
 				04C58B251A97438A002EC907 /* NSObject+SBJSON.m in Sources */,
 				04C58A9C1A970EBB002EC907 /* UIColor+expanded.m in Sources */,
+				047661A81AA9D5C700128AEF /* TRGoogleMapsAutocompleteItemsSource.m in Sources */,
 				04C58A9E1A970EBB002EC907 /* UIColor+HexColor.m in Sources */,
 				04C58AC41A97202B002EC907 /* VBPieChart.m in Sources */,
 				04E56E0F1A9B570500F5FC62 /* FPThankyouScreen.m in Sources */,
@@ -1347,6 +1390,7 @@
 				04C58A591A970E31002EC907 /* AFJSONUtilities.m in Sources */,
 				04C58A681A970E31002EC907 /* SOAPEnvelope.m in Sources */,
 				04C7D7341A9C9BAA00460517 /* SearchViewController.m in Sources */,
+				047661A11AA9D5A000128AEF /* TRAutocompleteView.m in Sources */,
 				04E56DFB1A9B2E9B00F5FC62 /* LandingScreen.m in Sources */,
 				04C58B5A1A9743D7002EC907 /* OAAttachment.m in Sources */,
 				04C58B311A9743AF002EC907 /* NSMutableURLRequest+Parameters.m in Sources */,
@@ -1377,6 +1421,7 @@
 				04C58B151A97430A002EC907 /* UIImage+WebP.m in Sources */,
 				04C589F01A970CC1002EC907 /* main.m in Sources */,
 				04C58B321A9743AF002EC907 /* NSString+URLEncoding.m in Sources */,
+				047661B21AA9D5DD00128AEF /* TRStringExtensions.m in Sources */,
 				04C58B261A97438A002EC907 /* NSString+SBJSON.m in Sources */,
 				04C58A571A970E31002EC907 /* AFImageRequestOperation.m in Sources */,
 				04C58B701A974425002EC907 /* FbGraphFile.m in Sources */,
@@ -1393,9 +1438,11 @@
 				04C58A9F1A970EBB002EC907 /* NSDate+convenience.m in Sources */,
 				04C58B6F1A974425002EC907 /* FbGraph.m in Sources */,
 				04C58A5E1A970E31002EC907 /* UIImageView+AFNetworking.m in Sources */,
+				047661B11AA9D5DD00128AEF /* TRTextFieldExtensions.m in Sources */,
 				04C58B331A9743AF002EC907 /* NSURL+Base.m in Sources */,
 				04C58B0C1A97430A002EC907 /* SDWebImageCompat.m in Sources */,
 				04C58B3B1A9743C8002EC907 /* Base64Transcoder.c in Sources */,
+				047661AA1AA9D5C700128AEF /* TRGoogleMapsAutocompletionCellFactory.m in Sources */,
 				04C58AA91A970ED0002EC907 /* NSData+Base64.m in Sources */,
 				04C58AC51A97202B002EC907 /* VBPiePiece.m in Sources */,
 				04E56E051A9B3CDA00F5FC62 /* GlobalController.m in Sources */,
@@ -1419,6 +1466,7 @@
 				04C58AA21A970EBB002EC907 /* UITextField+Attribute.m in Sources */,
 				04C58A5B1A970E31002EC907 /* AFPropertyListRequestOperation.m in Sources */,
 				04C58B5E1A9743D7002EC907 /* OAHMAC_SHA1SignatureProvider.m in Sources */,
+				047661A91AA9D5C700128AEF /* TRGoogleMapsSuggestion.m in Sources */,
 				04C58B0E1A97430A002EC907 /* SDWebImageDownloader.m in Sources */,
 				04C58B5C1A9743D7002EC907 /* OAConsumer.m in Sources */,
 				04C58AB41A971211002EC907 /* UIImage+Resize.m in Sources */,
